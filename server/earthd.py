@@ -3830,7 +3830,7 @@ class Connection:
     async def where(self, msg):
         """The status bar's location {"id", "lat", "lon", "online"} -> where_result {"id", "street", "place", "region",
         "country"}: the street from the cached map cells (never waits for a download), the town, state and country from
-        Photon's reverse geocoding with the position rounded to ~1 km, only when "online" (the mod's setting), and
+        Nominatim reverse geocoding with the position rounded to ~1 km, only when "online" (the mod's setting), and
         asked again only when that rounded position changed."""
         try:
             lat, lon = float(msg["lat"]), float(msg["lon"])
@@ -3858,7 +3858,7 @@ class Connection:
                     if place.get("place"):
                         self._where_place = (key, place)
                         cached = self._where_place
-                        log.info("where: Photon locality at %.5f, %.5f: %s, %s, %s",
+                        log.info("where: Nominatim locality at %.5f, %.5f: %s, %s, %s",
                                  lat, lon, place.get("place", ""), place.get("region", ""), place.get("country", ""))
                     else:
                         cached = None

@@ -10,14 +10,14 @@ import geocode  # noqa: E402
 
 
 class FakeNet:
-    """Captures the requested URL; answers with an empty Photon-shaped response."""
+    """Captures the requested URL; answers with an empty Nominatim-shaped response."""
     def __init__(self):
         self.urls = []
 
     def get(self, url, kind="demand", lane=None):
         self.urls.append(url)
         self.lane = lane
-        return types.SimpleNamespace(body=b'{"features": []}')
+        return types.SimpleNamespace(body=b'{"address": {}}')
 
 
 class LangForTest(unittest.TestCase):
@@ -41,7 +41,8 @@ class LangForTest(unittest.TestCase):
         self.assertEqual(parse_qs(urlparse(net.urls[0]).query)["lang"], ["en"])
         net = FakeNet()
         geocode.reverse(46.0207, 7.7491, net=net, country="CH")
-        self.assertEqual(parse_qs(urlparse(net.urls[0]).query)["lang"], ["de"])
+        self.assertEqual(parse_qs(urlparse(net.urls[0]).query)["accept-language"], ["de"])
+        self.assertEqual(net.lane, "reverse")
 
 
 class GeocodeTest(unittest.TestCase):
@@ -66,22 +67,35 @@ class GeocodeTest(unittest.TestCase):
         self.assertEqual(r[1]["name"], "1600 Pennsylvania Avenue Northwest")
         self.assertEqual(r[1]["detail"], "Washington")
 
-    def test_parse_reverse_city_from_photon(self):
-        data = {"features": [{
-            "properties": {
-                "city": "Minsk",
-                "district": "Uschod",
-                "country": "Belarus",
-                "street": "вуліца Кедышкі",
-                "housenumber": "12",
-            }
-        }]}
+    def test_parse_reverse_city_from_nominatim(self):
+        data = {"address": {
+            "city": "Minsk",
+            "state": "Minsk Region",
+            "country": "Belarus",
+            "road": "вуліца Кедышкі",
+            "house_number": "12",
+        }}
         self.assertEqual(geocode.parse_place(data),
-                         {"place": "Minsk", "region": "", "country": "Belarus"})
+                         {"place": "Minsk", "region": "Minsk Region", "country": "Belarus"})
+
+    def test_parse_reverse_town_fallbacks(self):
+        self.assertEqual(geocode.parse_place({"address": {"town": "Town", "country": "Country"}}),
+                         {"place": "Town", "region": "", "country": "Country"})
+        self.assertEqual(geocode.parse_place({"address": {"county": "County"}}),
+                         {"place": "County", "region": "", "country": ""})
 
     def test_parse_reverse_without_locality_is_empty(self):
-        self.assertEqual(geocode.parse_place({"features": []}),
+        self.assertEqual(geocode.parse_place({"address": {}}),
                          {"place": "", "region": "", "country": ""})
+
+    def test_nominatim_reverse_url(self):
+        q = parse_qs(urlparse(geocode.reverse_url(53.9278, 27.6269, "ru")).query)
+        self.assertEqual(q["format"], ["jsonv2"])
+        self.assertEqual(q["lat"], ["53.93"])
+        self.assertEqual(q["lon"], ["27.63"])
+        self.assertEqual(q["zoom"], ["10"])
+        self.assertEqual(q["addressdetails"], ["1"])
+        self.assertEqual(q["accept-language"], ["ru"])
 
     def test_short_query_is_not_sent(self):
         class Boom:
