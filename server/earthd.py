@@ -3853,10 +3853,18 @@ class Connection:
                 try:
                     place = await loop.run_in_executor(self.s.ui_pool, geocodemod.reverse, lat, lon, self.s.net,
                                                        self.s.country_at(lat, lon))
-                    self._where_place = (key, place)
-                    cached = self._where_place
-                except Exception as e:  # offline, rate limited: the bar shows the street alone
-                    log.debug("where: place: %s: %s", type(e).__name__, e)
+                    # Do not pin an empty Photon answer to this ~1 km cell: a transient/incomplete response
+                    # must be retried while the player stays here, otherwise the status bar shows only the street.
+                    if place.get("place"):
+                        self._where_place = (key, place)
+                        cached = self._where_place
+                    else:
+                        cached = None
+                        log.warning("where: Photon returned no locality at %.5f, %.5f", lat, lon)
+                except Exception as e:  # offline, rate limited: the bar retries on its next place interval
+                    cached = None
+                    log.warning("where: reverse geocoding at %.5f, %.5f: %s: %s",
+                                lat, lon, type(e).__name__, e)
             if cached is not None and cached[0] == key:
                 out.update(cached[1])
         self.send(out)
