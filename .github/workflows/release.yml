@@ -1,0 +1,194 @@
+# The player downloads: BeamNG.Earth-<VERSION>-x86_64.AppImage (Linux) and BeamNG.Earth-<VERSION>.exe (Windows),
+# each the launcher (launcher.py: the mod, the world server, the game started for you) with Python inside.
+# A push to main whose VERSION has no release yet builds both and publishes the release v<VERSION> (a pre-release
+# when the version says "preview"); "Run workflow" builds them as artifacts only (or releases with release: true).
+# Every push to dev builds a development build, the GitHub pre-release v<VERSION>.dev.<run number> (the user,
+# 2026-10-30: "every push to dev would create a new pre-release"; VERSION itself only goes up with a beta): newer than
+# the beta it follows and older than the next (server/updates.py), with a warning that it is not thoroughly tested;
+# a development build's update check looks at these pre-releases.
+name: release
+
+on:
+  push:
+    branches: [main, dev]
+  workflow_dispatch:
+    inputs:
+      release:
+        description: "Publish the release v<VERSION> (when it does not exist yet)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref == 'refs/heads/dev' }}     # (a newer push to dev replaces the build under way)
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+      build: ${{ steps.v.outputs.build }}
+      publish: ${{ steps.v.outputs.publish }}
+      dev: ${{ steps.v.outputs.dev }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: v
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          v=$(tr -d '[:space:]' < VERSION)
+          dev=false
+          if [ "${{ github.event_name }}" = "push" ] && [ "${{ github.ref }}" = "refs/heads/dev" ]; then
+            # a development build: the beta's version and a number that only goes up ("1.7.2-beta.dev.37")
+            case "$v" in *-*) v="$v.dev.${{ github.run_number }}";; *) v="$v-dev.${{ github.run_number }}";; esac
+            dev=true
+          fi
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+          echo "dev=$dev" >> "$GITHUB_OUTPUT"
+          if gh release view "v$v" >/dev/null 2>&1; then exists=1; else exists=0; fi
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "build=true" >> "$GITHUB_OUTPUT"
+            [ "${{ inputs.release }}" = "true" ] && [ $exists = 0 ] && pub=true || pub=false
+          else
+            [ $exists = 0 ] && pub=true || pub=false
+            echo "build=$pub" >> "$GITHUB_OUTPUT"
+          fi
+          echo "publish=$pub" >> "$GITHUB_OUTPUT"
+          echo "VERSION $v, release exists: $exists, publish: $pub"
+
+  linux:
+    needs: check
+    if: needs.check.outputs.build == 'true'
+    runs-on: ubuntu-22.04          # an older glibc: the AppImage runs on more distributions
+    steps:
+      - uses: actions/checkout@v4
+      - name: Development build's version
+        if: needs.check.outputs.dev == 'true'
+        run: printf '%s\n' "${{ needs.check.outputs.version }}" > VERSION
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Rust kernels
+        run: python tools/build_native.py
+      - name: Grass patch (tools/gcpatch)
+        run: sh tools/gcpatch/build.sh
+      - name: Python packages
+        run: python -m pip install pyinstaller -r server/requirements.txt
+      - name: appimagetool
+        run: |
+          curl -sSLo appimagetool https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x appimagetool
+          mv appimagetool appimagetool.AppImage
+      - name: Build the AppImage
+        run: python tools/build_app.py --appimagetool "$PWD/appimagetool.AppImage"
+      - name: Smoke test (the packaged server starts and answers --help)
+        run: |
+          f=$(ls dist/*.AppImage)
+          "$f" --appimage-extract-and-run --server --help > help.txt && head -3 help.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: dist/*.AppImage
+          if-no-files-found: error
+
+  windows:
+    needs: check
+    if: needs.check.outputs.build == 'true'
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Development build's version
+        if: needs.check.outputs.dev == 'true'
+        shell: bash
+        run: printf '%s\n' "${{ needs.check.outputs.version }}" > VERSION
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Rust kernels
+        run: python tools/build_native.py
+      - name: Python packages
+        run: python -m pip install pyinstaller -r server/requirements.txt
+      # PyInstaller's bootloader compiled here (MSVC) instead of the wheel's prebuilt one that antivirus heuristics
+      # know (VirusTotal 2026-10-17: 2/60 on 1.4.35); build_app.py stops without it
+      - name: Bootloader from source
+        run: python tools/build_bootloader.py
+      - name: Build the .exe
+        run: python tools/build_app.py --require-own-bootloader
+      - name: Smoke test (the packaged server starts and answers --help)
+        shell: bash
+        run: |
+          f=$(ls dist/*.exe)
+          "$f" --server --help > help.txt && head -3 help.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: dist/*.exe
+          if-no-files-found: error
+
+  release:
+    needs: [check, linux, windows]
+    if: needs.check.outputs.publish == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0              # (a development build's notes: the commits since the previous one)
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+      - name: Publish the development build v${{ needs.check.outputs.version }}
+        if: needs.check.outputs.dev == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          v=${{ needs.check.outputs.version }}
+          printf '%s\n' "$v" > VERSION
+          python3 tools/package.py --beammp
+          prev=$(gh release list --limit 50 --json tagName,isPrerelease \
+                 -q '[.[] | select(.isPrerelease and (.tagName | test("dev\\.[0-9]+$")))][0].tagName' || true)
+          if [ -n "$prev" ] && git rev-parse -q --verify "refs/tags/$prev" >/dev/null; then range="$prev..$GITHUB_SHA"
+          else range="-20 $GITHUB_SHA"; fi
+          {
+            echo "> [!WARNING]"
+            echo "> **Development build.** This version is built automatically from the \`dev\` branch and has **not been"
+            echo "> thoroughly tested**: expect bugs, and things may change or break between builds. For a tested version,"
+            echo "> use the latest beta release. Please report problems on [Discord](https://discord.gg/tgf) or in the"
+            echo "> GitHub issues, with this version number ($v)."
+            echo
+            echo "**Download** the file for your system (Windows: \`BeamNG.Earth-$v.exe\`, Linux:"
+            echo "\`BeamNG.Earth-$v-x86_64.AppImage\`), run it, and it does the rest. A development build's update"
+            echo "check offers the next development build (or the next beta, when that is newer)."
+            echo
+            echo "### Changes since ${prev:-the last builds}"
+            git log --no-merges --format='%s' $range | grep -v '^VERSION ' \
+              | awk '{ if (length($0) > 200) $0 = substr($0, 1, 197) "..."; print "- " $0 }'
+            if [ -n "$prev" ]; then
+              echo
+              echo "Full list of changes: https://github.com/${{ github.repository }}/compare/$prev...v$v"
+            fi
+          } > notes.md
+          gh release create "v$v" out/linux/* out/windows/* dist/BeamNG.Earth-BeamMP-Server-*.zip \
+            --target "$GITHUB_SHA" --title "BeamNG.Earth $v (development build)" --notes-file notes.md --prerelease
+      - name: Publish v${{ needs.check.outputs.version }}
+        if: needs.check.outputs.dev != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          v=${{ needs.check.outputs.version }}
+          pre=""
+          case "$v" in *preview*|*alpha*|*rc*) pre="--prerelease";; esac     # betas are full releases (the user, 2026-10-22)
+          cat > notes.md <<EOF
+          **Download** the file for your system, run it, and it does the rest: it installs the mod into BeamNG.drive,
+          starts the world server and starts the game. Then pick **Freeroam > BeamNG.Earth**.
+
+          - **Windows:** \`BeamNG.Earth-$v.exe\` (Windows may warn about an unknown app: More info > Run anyway)
+          - **Linux:** \`BeamNG.Earth-$v-x86_64.AppImage\` (make it executable: right-click > Properties, or
+            \`chmod +x\`). It starts the native game with the grass patch, no Steam launch options needed.
+
+          Steam must be running. Closing the game stops the server. See the README for details.
+          EOF
+          gh release create "v$v" out/linux/* out/windows/* --target "$GITHUB_SHA" --title "BeamNG.Earth $v" \
+            --notes-file notes.md --generate-notes $pre

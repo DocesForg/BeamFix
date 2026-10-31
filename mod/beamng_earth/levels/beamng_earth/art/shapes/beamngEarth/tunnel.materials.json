@@ -1,0 +1,611 @@
+{
+  "bne_rail_ballast": {
+    "name": "bne_rail_ballast",
+    "mapTo": "bne_rail_ballast",
+    "class": "Material",
+    "version": 1.5,
+    "persistentId": "8f0c6a51-3d2e-5b7a-9c41-2e6d8b1f7a93",
+    "Stages": [
+      {
+        "baseColorMap": "/assets/materials/terrain/soil/t_gravel/t_gravel_b.png",
+        "normalMap": "/assets/materials/terrain/soil/t_gravel/t_gravel_nm.png",
+        "roughnessMap": "/assets/materials/terrain/soil/t_gravel/t_gravel_r.png",
+        "ambientOcclusionMap": "/assets/materials/terrain/soil/t_gravel/t_gravel_ao.png",
+        "metallicFactor": 0,
+        "baseColorFactor": [
+          0.55,
+          0.53,
+          0.5,
+          1
+        ]
+      },
+      {},
+      {},
+      {}
+    ],
+    "groundType": "GRAVEL",
+    "translucent": false
+  },
+  "bne_rail_sleeper": {
+    "name": "bne_rail_sleeper",
+    "mapTo": "bne_rail_sleeper",
+    "class": "Material",
+    "version": 1.5,
+    "persistentId": "2b7e4c90-6a1d-5f38-8e52-9d4a0c3b6f17",
+    "Stages": [
+      {
+        "baseColorMap": "/assets/materials/tileable/concrete/concrete_plain/t_concrete_plain_b.color.png",
+        "normalMap": "/assets/materials/tileable/concrete/concrete_plain/t_concrete_plain_nm.normal.png",
+        "roughnessMap": "/assets/materials/tileable/concrete/concrete_plain/t_concrete_plain_r.data.png",
+        "ambientOcclusionMap": "/assets/materials/tileable/concrete/concrete_plain/t_concrete_plain_ao.data.png",
+        "metallicFactor": 0,
+        "baseColorFactor": [
+          0.42,
+          0.4,
+          0.37,
+          1
+        ]
+      },
+      {},
+      {},
+      {}
+    ],
+    "groundType": "CONCRETE",
+    "translucent": false
+  },
+  "bne_rail_steel": {
+    "name": "bne_rail_steel",
+    "mapTo": "bne_rail_steel",
+    "class": "Material",
+    "version": 1.5,
+    "persistentId": "c41f8a27-0e9b-5d63-a7c8-5b1e2f9d4a08",
+    "Stages": [
+      {
+        "metallicFactor": 0.6,
+        "roughnessFactor": 0.55,
+        "baseColorFactor": [
+          0.27,
+          0.19,
+          0.14,
+          1
+        ]
+      },
+      {},
+      {},
+      {}
+    ],
+    "groundType": "METAL",
+    "translucent": false
+  },
+  "bne_tunnel_light": {
+    "name": "bne_tunnel_light",
+    "mapTo": "bne_tunnel_light",
+    "class": "Material",
+    "version": 1.5,
+    "persistentId": "5951539d-2fb8-52fa-82f2-84e9fe21e54f",
+    "Stages": [
+      {
+        "baseColorFactor": [
+          1,
+          0.96,
+          0.88,
+          1
+        ],
+        "emissive": true,
+        "emissiveFactor": [
+          1,
+          0.93,
+          0.8
+        ],
+        "emissiveIntensityNits": 3000,
+        "roughnessFactor": 0.4
+      },
+      {},
+      {},
+      {}
+    ],
+    "groundType": "METAL",
+    "translucent": false
+  },
+  "bne_tunnel_stone": {
+    "name": "bne_tunnel_stone",
+    "mapTo": "bne_tunnel_stone",
+    "class": "Material",
+    "version": 1.5,
+    "persistentId": "9ad9dd62-4ce9-5e3d-81f4-7fa1710ca7af",
+    "Stages": [
+      {
+        "baseColorMap": "/assets/materials/tileable/stone/m_stonebrick_mixed_01/t_stonebrick_mixed_01_b.color.png",
+        "normalMap": "/assets/materials/tileable/stone/m_stonebrick_mixed_01/t_stonebrick_mixed_01_nm.normal.png",
+        "roughnessMap": "/assets/materials/tileable/stone/m_stonebrick_mixed_01/t_stonebrick_mixed_01_r.data.png",
+        "ambientOcclusionMap": "/assets/materials/tileable/stone/m_stonebrick_mixed_01/t_stonebrick_mixed_01_ao.data.png",
+        "metallicFactor": 0,
+        "baseColorFactor": [
+          0.92,
+          0.86,
+          0.8,
+          1
+        ]
+      },
+      {},
+      {},
+      {}
+    ],
+    "groundType": "ROCK",
+    "translucent": false
+  },
+  "bne_tunnel_stone_in": {
+    "name": "bne_tunnel_stone_in",
+    "mapTo": "bne_tunnel_stone_in",
+    "class": "Material",
+    "version": 1.5,
+    "persistentId": "ef9843c2-f603-5455-9e38-76fdc283406d",
+    "Stages": [
+      {
+        "baseColorMap": "/assets/materials/tileable/stone/m_stonebrick_mixed_01/t_stonebrick_mixed_01_b.color.png",
+        "normalMap": "/assets/materials/tileable/stone/m_stonebrick_mixed_01/t_stonebrick_mixed_01_nm.normal.png",
+        "roughnessMap": "/assets/materials/tileable/stone/m_stonebrick_mixed_01/t_stonebrick_mixed_01_r.data.png",
+        "ambientOcclusionMap": "/assets/materials/tileable/stone/m_stonebrick_mixed_01/t_stonebrick_mixed_01_ao.data.png",
+        "metallicFactor": 0,
+        "baseColorFactor": [
+          0.5,
+          0.47,
+          0.44,
+          1
+        ]
+      },
+      {},
+      {},
+      {}
+    ],
+    "groundType": "ROCK",
+    "translucent": false
+  },
+  "bne_tunnel_soil": {
+    "name": "bne_tunnel_soil",
+    "mapTo": "bne_tunnel_soil",
+    "class": "Material",
+    "version": 1.5,
+    "persistentId": "569ac43d-9576-542c-973d-787ab367f694",
+    "Stages": [
+      {
+        "baseColorMap": "/assets/materials/terrain/grass/t_grass_01/t_grass_01_b.png",
+        "normalMap": "/assets/materials/terrain/grass/t_grass_01/t_grass_01_nm.png",
+        "roughnessMap": "/assets/materials/terrain/grass/t_grass_01/t_grass_01_r.png",
+        "ambientOcclusionMap": "/assets/materials/terrain/grass/t_grass_01/t_grass_01_ao.png",
+        "metallicFactor": 0,
+        "baseColorFactor": [
+          0.36,
+          0.36,
+          0.24,
+          1
+        ]
+      },
+      {},
+      {},
+      {}
+    ],
+    "groundType": "GRASS",
+    "translucent": false
+  },
+  "bne_bridge_concrete": {
+    "name": "bne_bridge_concrete",
+    "mapTo": "bne_bridge_concrete",
+    "class": "Material",
+    "version": 1.5,
+    "persistentId": "5b4d08dc-d5e1-5360-878b-21c4c0b4fe26",
+    "Stages": [
+      {
+        "baseColorMap": "/assets/materials/tileable/concrete/concrete_plain/t_concrete_plain_b.color.png",
+        "normalMap": "/assets/materials/tileable/concrete/concrete_plain/t_concrete_plain_nm.normal.png",
+        "roughnessMap": "/assets/materials/tileable/concrete/concrete_plain/t_concrete_plain_r.data.png",
+        "ambientOcclusionMap": "/assets/materials/tileable/concrete/concrete_plain/t_concrete_plain_ao.data.png",
+        "metallicFactor": 0,
+        "baseColorFactor": [
+          0.82,
+          0.8,
+          0.77,
+          1
+        ]
+      },
+      {},
+      {},
+      {}
+    ],
+    "groundType": "CONCRETE",
+    "translucent": false
+  },
+  "bne_truss_steel": {
+    "name": "bne_truss_steel",
+    "mapTo": "bne_truss_steel",
+    "class": "Material",
+    "version": 1.5,
+    "persistentId": "ad3581d8-d936-5215-8d12-3fd09a53eb6b",
+    "Stages": [
+      {
+        "baseColorMap": "/assets/materials/tileable/metal/metal_paint/metal_paint_d.color.dds",
+        "normalMap": "/assets/materials/tileable/metal/metal_paint/metal_paint_nm.normal.dds",
+        "roughnessFactor": 0.6,
+        "metallicFactor": 0.3,
+        "baseColorFactor": [
+          0.62,
+          0.63,
+          0.62,
+          1
+        ]
+      },
+      {},
+      {},
+      {}
+    ],
+    "groundType": "METAL",
+    "translucent": false
+  },
+  "bne_steel_orange": {
+    "name": "bne_steel_orange",
+    "mapTo": "bne_steel_orange",
+    "class": "Material",
+    "version": 1.5,
+    "persistentId": "595b5773-6684-5237-8ddb-06ecb19fa06e",
+    "Stages": [
+      {
+        "baseColorMap": "/assets/materials/tileable/metal/metal_paint/metal_paint_d.color.dds",
+        "normalMap": "/assets/materials/tileable/metal/metal_paint/metal_paint_nm.normal.dds",
+        "roughnessFactor": 0.6,
+        "metallicFactor": 0.3,
+        "baseColorFactor": [
+          0.941,
+          0.29,
+          0.0,
+          1
+        ]
+      },
+      {},
+      {},
+      {}
+    ],
+    "groundType": "METAL",
+    "translucent": false
+  },
+  "bne_steel_red": {
+    "name": "bne_steel_red",
+    "mapTo": "bne_steel_red",
+    "class": "Material",
+    "version": 1.5,
+    "persistentId": "6981125d-09a9-5c06-99db-9fc0b87c6bb2",
+    "Stages": [
+      {
+        "baseColorMap": "/assets/materials/tileable/metal/metal_paint/metal_paint_d.color.dds",
+        "normalMap": "/assets/materials/tileable/metal/metal_paint/metal_paint_nm.normal.dds",
+        "roughnessFactor": 0.6,
+        "metallicFactor": 0.3,
+        "baseColorFactor": [
+          0.588,
+          0.098,
+          0.078,
+          1
+        ]
+      },
+      {},
+      {},
+      {}
+    ],
+    "groundType": "METAL",
+    "translucent": false
+  },
+  "bne_steel_green": {
+    "name": "bne_steel_green",
+    "mapTo": "bne_steel_green",
+    "class": "Material",
+    "version": 1.5,
+    "persistentId": "18a7a69a-49ad-55f0-9fa1-a2c1911a70e9",
+    "Stages": [
+      {
+        "baseColorMap": "/assets/materials/tileable/metal/metal_paint/metal_paint_d.color.dds",
+        "normalMap": "/assets/materials/tileable/metal/metal_paint/metal_paint_nm.normal.dds",
+        "roughnessFactor": 0.6,
+        "metallicFactor": 0.3,
+        "baseColorFactor": [
+          0.235,
+          0.392,
+          0.275,
+          1
+        ]
+      },
+      {},
+      {},
+      {}
+    ],
+    "groundType": "METAL",
+    "translucent": false
+  },
+  "bne_steel_blue": {
+    "name": "bne_steel_blue",
+    "mapTo": "bne_steel_blue",
+    "class": "Material",
+    "version": 1.5,
+    "persistentId": "5d7724a0-91e5-5aba-bff8-b21c959cb9a5",
+    "Stages": [
+      {
+        "baseColorMap": "/assets/materials/tileable/metal/metal_paint/metal_paint_d.color.dds",
+        "normalMap": "/assets/materials/tileable/metal/metal_paint/metal_paint_nm.normal.dds",
+        "roughnessFactor": 0.6,
+        "metallicFactor": 0.3,
+        "baseColorFactor": [
+          0.196,
+          0.314,
+          0.51,
+          1
+        ]
+      },
+      {},
+      {},
+      {}
+    ],
+    "groundType": "METAL",
+    "translucent": false
+  },
+  "bne_steel_black": {
+    "name": "bne_steel_black",
+    "mapTo": "bne_steel_black",
+    "class": "Material",
+    "version": 1.5,
+    "persistentId": "fd74009f-676c-5dd4-9103-c95fa0aff527",
+    "Stages": [
+      {
+        "baseColorMap": "/assets/materials/tileable/metal/metal_paint/metal_paint_d.color.dds",
+        "normalMap": "/assets/materials/tileable/metal/metal_paint/metal_paint_nm.normal.dds",
+        "roughnessFactor": 0.6,
+        "metallicFactor": 0.3,
+        "baseColorFactor": [
+          0.098,
+          0.098,
+          0.098,
+          1
+        ]
+      },
+      {},
+      {},
+      {}
+    ],
+    "groundType": "METAL",
+    "translucent": false
+  },
+  "bne_steel_white": {
+    "name": "bne_steel_white",
+    "mapTo": "bne_steel_white",
+    "class": "Material",
+    "version": 1.5,
+    "persistentId": "88ea6be3-6d29-5ada-96d8-15ba2e7231c5",
+    "Stages": [
+      {
+        "baseColorMap": "/assets/materials/tileable/metal/metal_paint/metal_paint_d.color.dds",
+        "normalMap": "/assets/materials/tileable/metal/metal_paint/metal_paint_nm.normal.dds",
+        "roughnessFactor": 0.6,
+        "metallicFactor": 0.3,
+        "baseColorFactor": [
+          0.882,
+          0.882,
+          0.863,
+          1
+        ]
+      },
+      {},
+      {},
+      {}
+    ],
+    "groundType": "METAL",
+    "translucent": false
+  },
+  "bne_steel_yellow": {
+    "name": "bne_steel_yellow",
+    "mapTo": "bne_steel_yellow",
+    "class": "Material",
+    "version": 1.5,
+    "persistentId": "50605b1b-e44d-5292-88f8-2249987295c4",
+    "Stages": [
+      {
+        "baseColorMap": "/assets/materials/tileable/metal/metal_paint/metal_paint_d.color.dds",
+        "normalMap": "/assets/materials/tileable/metal/metal_paint/metal_paint_nm.normal.dds",
+        "roughnessFactor": 0.6,
+        "metallicFactor": 0.3,
+        "baseColorFactor": [
+          0.863,
+          0.667,
+          0.118,
+          1
+        ]
+      },
+      {},
+      {},
+      {}
+    ],
+    "groundType": "METAL",
+    "translucent": false
+  },
+  "bne_steel_brown": {
+    "name": "bne_steel_brown",
+    "mapTo": "bne_steel_brown",
+    "class": "Material",
+    "version": 1.5,
+    "persistentId": "f99c3a4e-b4a7-5e4a-bb20-094e611b6491",
+    "Stages": [
+      {
+        "baseColorMap": "/assets/materials/tileable/metal/metal_paint/metal_paint_d.color.dds",
+        "normalMap": "/assets/materials/tileable/metal/metal_paint/metal_paint_nm.normal.dds",
+        "roughnessFactor": 0.6,
+        "metallicFactor": 0.3,
+        "baseColorFactor": [
+          0.373,
+          0.235,
+          0.157,
+          1
+        ]
+      },
+      {},
+      {},
+      {}
+    ],
+    "groundType": "METAL",
+    "translucent": false
+  },
+  "bne_tunnel_inner": {
+    "name": "bne_tunnel_inner",
+    "mapTo": "bne_tunnel_inner",
+    "class": "Material",
+    "version": 1.5,
+    "persistentId": "d2660d55-7212-555e-83a2-0b6ca50a26b1",
+    "Stages": [
+      {
+        "baseColorMap": "/assets/materials/tileable/concrete/concrete_plain/t_concrete_plain_b.color.png",
+        "normalMap": "/assets/materials/tileable/concrete/concrete_plain/t_concrete_plain_nm.normal.png",
+        "roughnessMap": "/assets/materials/tileable/concrete/concrete_plain/t_concrete_plain_r.data.png",
+        "ambientOcclusionMap": "/assets/materials/tileable/concrete/concrete_plain/t_concrete_plain_ao.data.png",
+        "metallicFactor": 0,
+        "baseColorFactor": [
+          0.36,
+          0.33,
+          0.29,
+          1
+        ]
+      },
+      {},
+      {},
+      {}
+    ],
+    "groundType": "CONCRETE",
+    "translucent": false
+  },
+  "bne_rail_ballast_weedy": {
+    "name": "bne_rail_ballast_weedy",
+    "mapTo": "bne_rail_ballast_weedy",
+    "class": "Material",
+    "version": 1.5,
+    "persistentId": "591d15c9-815b-5518-9668-00787ef4d544",
+    "Stages": [
+      {
+        "baseColorMap": "/assets/materials/terrain/grass/t_dirt_vegetation/t_dirt_vegetation_b.png",
+        "normalMap": "/assets/materials/terrain/grass/t_dirt_vegetation/t_dirt_vegetation_nm.png",
+        "roughnessMap": "/assets/materials/terrain/grass/t_dirt_vegetation/t_dirt_vegetation_r.png",
+        "ambientOcclusionMap": "/assets/materials/terrain/grass/t_dirt_vegetation/t_dirt_vegetation_ao.png",
+        "metallicFactor": 0,
+        "baseColorFactor": [
+          0.62,
+          0.6,
+          0.48,
+          1
+        ]
+      },
+      {},
+      {},
+      {}
+    ],
+    "groundType": "GRAVEL",
+    "translucent": false
+  },
+  "bne_rail_ballast_grown": {
+    "name": "bne_rail_ballast_grown",
+    "mapTo": "bne_rail_ballast_grown",
+    "class": "Material",
+    "version": 1.5,
+    "persistentId": "7c7c9460-1fb8-5b3a-ba65-29d36edaf618",
+    "Stages": [
+      {
+        "baseColorMap": "/assets/materials/terrain/soil/t_dirt_dry_grassy/t_dirt_dry_grassy_b.png",
+        "normalMap": "/assets/materials/terrain/soil/t_dirt_dry_grassy/t_dirt_dry_grassy_nm.png",
+        "roughnessMap": "/assets/materials/terrain/soil/t_dirt_dry_grassy/t_dirt_dry_grassy_r.png",
+        "ambientOcclusionMap": "/assets/materials/terrain/soil/t_dirt_dry_grassy/t_dirt_dry_grassy_ao.png",
+        "metallicFactor": 0,
+        "baseColorFactor": [
+          0.5,
+          0.5,
+          0.4,
+          1
+        ]
+      },
+      {},
+      {},
+      {}
+    ],
+    "groundType": "DIRT",
+    "translucent": false
+  },
+  "bne_rail_sleeper_old": {
+    "name": "bne_rail_sleeper_old",
+    "mapTo": "bne_rail_sleeper_old",
+    "class": "Material",
+    "version": 1.5,
+    "persistentId": "6920750d-5eb0-5173-905b-01ab01b2ef43",
+    "Stages": [
+      {
+        "baseColorMap": "/assets/materials/tileable/concrete/concrete_plain/t_concrete_plain_b.color.png",
+        "normalMap": "/assets/materials/tileable/concrete/concrete_plain/t_concrete_plain_nm.normal.png",
+        "roughnessMap": "/assets/materials/tileable/concrete/concrete_plain/t_concrete_plain_r.data.png",
+        "ambientOcclusionMap": "/assets/materials/tileable/concrete/concrete_plain/t_concrete_plain_ao.data.png",
+        "metallicFactor": 0,
+        "baseColorFactor": [
+          0.3,
+          0.27,
+          0.23,
+          1
+        ]
+      },
+      {},
+      {},
+      {}
+    ],
+    "groundType": "CONCRETE",
+    "translucent": false
+  },
+  "bne_rail_steel_old": {
+    "name": "bne_rail_steel_old",
+    "mapTo": "bne_rail_steel_old",
+    "class": "Material",
+    "version": 1.5,
+    "persistentId": "672b11d9-1df6-587b-a76e-aaf30d615998",
+    "Stages": [
+      {
+        "metallicFactor": 0.25,
+        "roughnessFactor": 0.85,
+        "baseColorFactor": [
+          0.33,
+          0.17,
+          0.09,
+          1
+        ]
+      },
+      {},
+      {},
+      {}
+    ],
+    "groundType": "METAL",
+    "translucent": false
+  },
+  "bne_bridge_asphalt": {
+    "name": "bne_bridge_asphalt",
+    "mapTo": "bne_bridge_asphalt",
+    "class": "Material",
+    "version": 1.5,
+    "persistentId": "d364e483-ecf2-50c9-a4a9-b34d7ee84460",
+    "Stages": [
+      {
+        "baseColorMap": "/assets/materials/terrain/asphalt/asphalt/t_asphalt_b.png",
+        "normalMap": "/assets/materials/terrain/asphalt/asphalt/t_asphalt_nm.png",
+        "roughnessMap": "/assets/materials/terrain/asphalt/asphalt/t_asphalt_r.png",
+        "ambientOcclusionMap": "/assets/materials/terrain/asphalt/asphalt/t_asphalt_ao.png",
+        "metallicFactor": 0,
+        "baseColorFactor": [
+          0.52,
+          0.52,
+          0.53,
+          1
+        ]
+      },
+      {},
+      {},
+      {}
+    ],
+    "groundType": "ASPHALT",
+    "translucent": false
+  }
+}
