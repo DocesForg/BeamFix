@@ -210,6 +210,11 @@ POLICIES = {
     # debounced and cached; a modest rate, a daily cap (fair use of a free public service)
     "photon.komoot.io": HostPolicy(rate=2.0, burst=4.0, max_conc=1, daily_budget=2000, daily_hard=3000,
                                    cache_ttl=7 * DAY, miss_ttl=None, max_wait=5.0, timeout=12.0, max_attempts=1, optional=True),
+    # Nominatim reverse geocoding for the moving status bar. Public service policy: at most 1 request/s,
+    # no autocomplete or bulk requests; the mod asks at most once every 120 s while the car is moving.
+    "nominatim.openstreetmap.org": HostPolicy(rate=1.0, burst=1.0, max_conc=1, daily_budget=2000,
+                                               daily_hard=3000, max_wait=5.0, timeout=15.0,
+                                               max_attempts=1, optional=True),
     # OSRM on OpenStreetMap by FOSSGIS (routing.py): one request per GPS destination or re-route; their fair use:
     # ~1 request a second at most, no bulk
     "routing.openstreetmap.de": HostPolicy(rate=0.5, burst=2.0, max_conc=1, daily_budget=300, daily_hard=500,
