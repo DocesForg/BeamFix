@@ -20,7 +20,8 @@ M.BACK_RGBA = { 0.05, 0.06, 0.08, 0.55 }
 M.WHERE_STREET_M = 30
 M.WHERE_PLACE_M = 1500
 M.WHERE_MIN_S = 2.0
-M.WHERE_PLACE_S = 20
+M.WHERE_MIN_SPEED = 0.5       -- m/s: no location requests while the car is stopped
+M.WHERE_PLACE_S = 120
 M.FPS_ALPHA = 0.05
 
 local loc = { street = '', place = '', region = '', country = '' }
@@ -74,6 +75,8 @@ end
 
 function M.request(now, player, online)
   if not M.enabled or not player or not player.lat then return nil end
+  -- Do not refresh either street or locality while stopped (or when the player is only using the free camera).
+  if type(player.speed) ~= 'number' or player.speed < M.WHERE_MIN_SPEED then return nil end
   -- moved: in lat / lon, not the anchor frame's x, y (a teleport lands at x, y ~ 0 again: the bar kept the old
   -- place's street, "John Muir Trail" in Provence, 2026-10-15; a rebase shifts x, y too)
   local moved = last and M.dist(last.lat, last.lon, player.lat, player.lon) or math.huge
