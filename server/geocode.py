@@ -82,37 +82,35 @@ def search(q, lat=None, lon=None, net=None, country=None):
 
 
 # ------------------------------------------------------------------------------------------- where am I
-# The status bar (the user, 2026-10-15: "location info like street, city, country"): the town, state and country
-# from Photon's reverse geocoding, asked with the position ROUNDED to REVERSE_ROUND decimals (~1 km: the bar needs the
-# town, not the house) and only when the mod's setting allows it; the street comes from our own map data (nearest_street).
-REVERSE_URL = "https://photon.komoot.io/reverse"
+# The status bar gets locality from Nominatim (Photon remains the map's search-as-you-type service). The query is
+# rounded to ~1 km: the bar needs the town, not the house. Nominatim is only called while driving and at most once
+# every 120 s by statusbar.lua; its public service policy is enforced by netfetch's 1 request/s host policy.
+REVERSE_URL = "https://nominatim.openstreetmap.org/reverse"
 REVERSE_ROUND = 2
 STREET_M = 40.0                 # the nearest named road within this is "the street"
 
 
 def reverse_url(lat, lon, lang="en"):
-    """The Photon reverse request for (lat, lon) rounded to REVERSE_ROUND decimals. Pure."""
+    """The Nominatim reverse request for (lat, lon) rounded to REVERSE_ROUND decimals. Pure."""
     return REVERSE_URL + "?" + urllib.parse.urlencode(
-        [("lat", f"{round(float(lat), REVERSE_ROUND):.{REVERSE_ROUND}f}"),
-         ("lon", f"{round(float(lon), REVERSE_ROUND):.{REVERSE_ROUND}f}"), ("lang", lang), ("limit", "1")])
+        [("format", "jsonv2"), ("lat", f"{round(float(lat), REVERSE_ROUND):.{REVERSE_ROUND}f}"),
+         ("lon", f"{round(float(lon), REVERSE_ROUND):.{REVERSE_ROUND}f}"), ("zoom", "10"),
+         ("addressdetails", "1"), ("accept-language", lang)])
 
 
 def parse_place(data):
-    """{place, region, country} of a Photon reverse response (the first feature; missing parts ''). Pure."""
-    feats = (data or {}).get("features") or []
-    p = (feats[0].get("properties") or {}) if feats else {}
-    place = p.get("city") or p.get("town") or p.get("village") or p.get("district") or p.get("county") or ""
-    if not place and p.get("type") in ("city", "town", "village", "locality"):
-        place = p.get("name") or ""
-    return {"place": place, "region": p.get("state") or "", "country": p.get("country") or ""}
+    """{place, region, country} from a Nominatim reverse response. Pure."""
+    address = (data or {}).get("address") or {}
+    place = (address.get("city") or address.get("town") or address.get("village")
+             or address.get("municipality") or address.get("county") or "")
+    return {"place": place, "region": address.get("state") or "", "country": address.get("country") or ""}
 
 
 def reverse(lat, lon, net=None, country=None):
     """The town, state and country around (lat, lon) (blocking), in country's language (lang_for). Raises
     netfetch.FetchError on network trouble."""
     net = net if net is not None else netfetch.default_fetcher()
-    # (a lane of its own: the status bar asks as the player moves, and its timeouts opened the host's breaker and
-    # shut the map's search out, "Address search unavailable", GitHub #350)
+    # A separate lane keeps reverse-geocoding failures from affecting Photon map search (GitHub #350).
     return parse_place(json.loads(net.get(reverse_url(lat, lon, lang=lang_for(country)), kind="demand", lane="reverse")
                                   .body.decode("utf-8")))
 
