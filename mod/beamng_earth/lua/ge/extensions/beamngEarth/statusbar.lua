@@ -77,9 +77,13 @@ function M.request(now, player, online)
   -- moved: in lat / lon, not the anchor frame's x, y (a teleport lands at x, y ~ 0 again: the bar kept the old
   -- place's street, "John Muir Trail" in Provence, 2026-10-15; a rebase shifts x, y too)
   local moved = last and M.dist(last.lat, last.lon, player.lat, player.lon) or math.huge
-  if last and (now - last.t < M.WHERE_MIN_S or moved < M.WHERE_STREET_M) then return nil end
+  if last and now - last.t < M.WHERE_MIN_S then return nil end
   local placeDue = online and (not last or not last.pt or now - last.pt >= M.WHERE_PLACE_S
     or M.dist(last.plat, last.plon, player.lat, player.lon) >= M.WHERE_PLACE_M)
+  -- Place lookup has its own timer: do not let the street's 30 m movement threshold suppress a retry
+  -- when Photon returned an incomplete result and the player is stationary.
+  local streetDue = not last or moved >= M.WHERE_STREET_M
+  if not streetDue and not placeDue then return nil end
   last = { lat = player.lat, lon = player.lon, t = now, plat = last and last.plat, plon = last and last.plon,
     pt = last and last.pt }
   if placeDue then last.plat, last.plon, last.pt = player.lat, player.lon, now end
