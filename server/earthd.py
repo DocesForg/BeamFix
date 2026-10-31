@@ -3858,6 +3858,8 @@ class Connection:
                     if place.get("place"):
                         self._where_place = (key, place)
                         cached = self._where_place
+                        log.info("where: Photon locality at %.5f, %.5f: %s, %s, %s",
+                                 lat, lon, place.get("place", ""), place.get("region", ""), place.get("country", ""))
                     else:
                         cached = None
                         log.warning("where: Photon returned no locality at %.5f, %.5f", lat, lon)
