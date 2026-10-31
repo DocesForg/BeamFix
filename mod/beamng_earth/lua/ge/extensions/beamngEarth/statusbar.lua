@@ -20,7 +20,7 @@ M.BACK_RGBA = { 0.05, 0.06, 0.08, 0.55 }
 M.WHERE_STREET_M = 30
 M.WHERE_PLACE_M = 1500
 M.WHERE_MIN_S = 2.0
-M.WHERE_PLACE_S = 120
+M.WHERE_PLACE_S = 20
 M.FPS_ALPHA = 0.05
 
 local loc = { street = '', place = '', region = '', country = '' }
