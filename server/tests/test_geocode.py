@@ -66,6 +66,23 @@ class GeocodeTest(unittest.TestCase):
         self.assertEqual(r[1]["name"], "1600 Pennsylvania Avenue Northwest")
         self.assertEqual(r[1]["detail"], "Washington")
 
+    def test_parse_reverse_city_from_photon(self):
+        data = {"features": [{
+            "properties": {
+                "city": "Minsk",
+                "district": "Uschod",
+                "country": "Belarus",
+                "street": "вуліца Кедышкі",
+                "housenumber": "12",
+            }
+        }]}
+        self.assertEqual(geocode.parse_place(data),
+                         {"place": "Minsk", "region": "", "country": "Belarus"})
+
+    def test_parse_reverse_without_locality_is_empty(self):
+        self.assertEqual(geocode.parse_place({"features": []}),
+                         {"place": "", "region": "", "country": ""})
+
     def test_short_query_is_not_sent(self):
         class Boom:
             def get(self, *a, **k):
