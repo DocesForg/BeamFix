@@ -10,14 +10,14 @@ import geocode  # noqa: E402
 
 
 class FakeNet:
-    """Captures the requested URL; answers with an empty Photon-shaped response."""
+    """Captures the requested URL; answers with an empty Nominatim-shaped response."""
     def __init__(self):
         self.urls = []
 
     def get(self, url, kind="demand", lane=None):
         self.urls.append(url)
         self.lane = lane
-        return types.SimpleNamespace(body=b'{"features": []}')
+        return types.SimpleNamespace(body=b'{"address": {}}')
 
 
 class LangForTest(unittest.TestCase):
@@ -32,7 +32,7 @@ class LangForTest(unittest.TestCase):
     def test_search_and_reverse_pick_it_up(self):
         net = FakeNet()
         geocode.search("Koeln", 50.9375, 6.9603, net=net, country="DE")
-        self.assertEqual(parse_qs(urlparse(net.urls[0]).query)["accept-language"], ["de"])
+        self.assertEqual(parse_qs(urlparse(net.urls[0]).query)["lang"], ["de"])
         net = FakeNet()
         geocode.search("Praha", 50.08, 14.42, net=net, country="CZ")      # (inside the PR's DACH box)
         self.assertEqual(parse_qs(urlparse(net.urls[0]).query)["lang"], ["en"])
@@ -41,7 +41,8 @@ class LangForTest(unittest.TestCase):
         self.assertEqual(parse_qs(urlparse(net.urls[0]).query)["lang"], ["en"])
         net = FakeNet()
         geocode.reverse(46.0207, 7.7491, net=net, country="CH")
-        self.assertEqual(parse_qs(urlparse(net.urls[0]).query)["lang"], ["de"])
+        self.assertEqual(parse_qs(urlparse(net.urls[0]).query)["accept-language"], ["de"])
+        self.assertEqual(net.lane, "reverse")
 
 
 class GeocodeTest(unittest.TestCase):
